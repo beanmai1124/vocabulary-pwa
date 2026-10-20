@@ -1,8 +1,8 @@
-# GitHub Excel 唯讀來源版 v8
+# GitHub Excel 唯讀來源版 v9（完全不依賴 CDN）
 
-1. 使用 Excel 編輯 `vocabulary.xlsx` 的 `Vocabulary` 工作表。
-2. 保留 `ID`、`English`、`Chinese` 欄位。
-3. 上傳 GitHub 覆蓋同名 `vocabulary.xlsx`。
-4. iPhone 開啟 App 後自動同步。
-5. Pass/Fail 只保存在 iPhone。
-6. ID 必須唯一且不要修改。
+- `fflate.min.js` 已放在專案內，用來解壓 `.xlsx`。
+- App 開啟時自動讀取同目錄的 `vocabulary.xlsx`。
+- Excel 工作表名稱：`Vocabulary`。
+- 必填欄位：`ID`、`English`、`Chinese`。
+- Pass/Fail 與複習日期只存 iPhone。
+- 修改 Excel 後，覆蓋 GitHub 根目錄的 `vocabulary.xlsx`，再按「同步 GitHub Excel」。
