@@ -1,19 +1,8 @@
-# 可直接替換版本 v6
+# v7 使用方式
 
-將本資料夾中的檔案上傳到 GitHub Repository 根目錄，覆蓋同名檔案：
-
-- index.html
-- app.js
-- style.css
-- sw.js
-- manifest.webmanifest
-- vocabulary_template.csv
-- icons/
-
-此版本會：
-
-1. 顯示明確的載入與錯誤狀態。
-2. 支援 iPhone 手動匯入 CSV。
-3. 啟動時自動讀取同一個 GitHub Pages 目錄的 vocabulary_template.csv。
-4. 保留既有 Pass/Fail 紀錄。
-5. 使用 v6 快取名稱，避免沿用舊程式。
+- 第一次按「匯入 CSV」選擇檔案。
+- App 會把 CSV 內容保存到 iPhone 的 PWA 儲存空間。
+- 之後開啟 App 會自動載入，不需要再次選檔。
+- 若手機上的原始 CSV 被修改，請再按一次「匯入 CSV」更新。
+- 題目每次隨機顯示英文或中文，翻面顯示另一種語言和例句。
+- 畫面只保留匯入 CSV、匯出 CSV，以及學習操作按鈕。
