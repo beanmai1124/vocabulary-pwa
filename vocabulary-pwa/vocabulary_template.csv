@@ -1,0 +1,4 @@
+﻿English,Chinese,example,example_zh,category,Pass,Fail,NextReview,LastReviewed,IntervalDays
+install,安裝,Please install the driver.,請安裝驅動程式。,Technical,0,0,,,0
+verify,確認,Verify the firmware version.,確認韌體版本。,Technical,0,0,,,0
+flexible,有彈性的,This workflow is flexible.,這個流程很有彈性。,General,0,0,,,0
