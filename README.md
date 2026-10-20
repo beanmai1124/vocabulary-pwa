@@ -1,12 +1,19 @@
-# 單字複習 PWA Pass/Fail 版
+# 可直接替換版本 v6
 
-## Excel / CSV 欄位
-English, Chinese, example, example_zh, category, Pass, Fail, NextReview, LastReviewed, IntervalDays
+將本資料夾中的檔案上傳到 GitHub Repository 根目錄，覆蓋同名檔案：
 
-請用 `vocabulary_template_pass_fail.xlsx` 編輯內容，再於 Excel 另存成 **CSV UTF-8** 後匯入 App。App 作答後按「匯出 CSV」，即可取得包含最新 Pass/Fail 次數和複習日期的檔案。
+- index.html
+- app.js
+- style.css
+- sw.js
+- manifest.webmanifest
+- vocabulary_template.csv
+- icons/
 
-## 排程
-Pass 間隔依序為 1、3、7、14、30、60、120 天；Fail 會重設間隔並排回今天。
+此版本會：
 
-## GitHub Pages
-將本資料夾所有檔案上傳至 Public Repository，Settings > Pages > Deploy from a branch > main / root。iPhone Safari 開啟 HTTPS 網址，分享 > 加入主畫面。
+1. 顯示明確的載入與錯誤狀態。
+2. 支援 iPhone 手動匯入 CSV。
+3. 啟動時自動讀取同一個 GitHub Pages 目錄的 vocabulary_template.csv。
+4. 保留既有 Pass/Fail 紀錄。
+5. 使用 v6 快取名稱，避免沿用舊程式。
