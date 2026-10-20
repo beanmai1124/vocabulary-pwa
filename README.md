@@ -1,8 +1,8 @@
-# v7 使用方式
+# GitHub Excel 唯讀來源版 v8
 
-- 第一次按「匯入 CSV」選擇檔案。
-- App 會把 CSV 內容保存到 iPhone 的 PWA 儲存空間。
-- 之後開啟 App 會自動載入，不需要再次選檔。
-- 若手機上的原始 CSV 被修改，請再按一次「匯入 CSV」更新。
-- 題目每次隨機顯示英文或中文，翻面顯示另一種語言和例句。
-- 畫面只保留匯入 CSV、匯出 CSV，以及學習操作按鈕。
+1. 使用 Excel 編輯 `vocabulary.xlsx` 的 `Vocabulary` 工作表。
+2. 保留 `ID`、`English`、`Chinese` 欄位。
+3. 上傳 GitHub 覆蓋同名 `vocabulary.xlsx`。
+4. iPhone 開啟 App 後自動同步。
+5. Pass/Fail 只保存在 iPhone。
+6. ID 必須唯一且不要修改。
