@@ -1,1 +1,474 @@
-const DATA='vocab-pf-data-v2',BACK='vocab-pf-progress-v2',STEPS=[1,3,7,14,30,60,120];let words=[],view=[],i=0,flip=false,progress={};const $=x=>document.getElementById(x);function today(){return new Date().toISOString().slice(0,10)}function addDays(n){let d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function csv(text){let a=[],r=[],v='',q=false;text=text.replace(/^\uFEFF/,'');for(let p=0;p<text.length;p++){let c=text[p],n=text[p+1];if(c==='"'&&q&&n==='"'){v+='"';p++}else if(c==='"')q=!q;else if(c===','&&!q){r.push(v.trim());v=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')p++;r.push(v.trim());v='';if(r.some(Boolean))a.push(r);r=[]}else v+=c}if(v||r.length){r.push(v.trim());a.push(r)}if(a.length<2)return[];let h=a[0].map(x=>x.toLowerCase()),at=(...x)=>h.findIndex(y=>x.includes(y));return a.slice(1).map((r,k)=>({id:(r[at('english','word','單字')]||'word')+'-'+k,English:r[at('english','word','單字')]||'',Chinese:r[at('chinese','meaning','中文','意思')]||'',example:r[at('example','例句')]||'',example_zh:r[at('example_zh','例句中文','中文例句')]||'',category:r[at('category','分類')]||'未分類',Pass:+r[at('pass')]||0,Fail:+r[at('fail')]||0,NextReview:r[at('nextreview','next_review')]||'',LastReviewed:r[at('lastreviewed','last_reviewed')]||'',IntervalDays:+r[at('intervaldays','interval_days')]||0})).filter(x=>x.English)}function save(){localStorage.setItem(DATA,JSON.stringify(words));localStorage.setItem(BACK,JSON.stringify(progress))}function load(){try{words=JSON.parse(localStorage.getItem(DATA))||[]}catch{}try{progress=JSON.parse(localStorage.getItem(BACK))||{}}catch{};words.forEach(w=>{let p=progress[w.id];if(p)Object.assign(w,p)});cats();filter()}function cats(){let old=$('category').value,cs=[...new Set(words.map(w=>w.category))].sort();$('category').innerHTML='<option value="all">全部分類</option>'+cs.map(x=>`<option>${esc(x)}</option>`).join('');if(cs.includes(old))$('category').value=old}function due(w){return !w.NextReview||w.NextReview<=today()}function filter(){let c=$('category').value;view=words.filter(w=>(c==='all'||w.category===c)&&due(w));if(!view.length)view=words.filter(w=>c==='all'||w.category===c);i=Math.min(i,Math.max(0,view.length-1));setFlip(false);render()}function setFlip(x){flip=x;$('card').classList.toggle('flipped',x);$('front').hidden=x;$('back').hidden=!x}function render(){let w=view[i];if(!w){$('english').textContent='請匯入 CSV';$('meta').textContent='尚未匯入';$('chinese').textContent=$('example').textContent=$('exampleZh').textContent='';$('wordPass').textContent=$('wordFail').textContent='0';$('nextReview').textContent='-'}else{$('english').textContent=w.English;$('chinese').textContent=w.Chinese;$('example').textContent=w.example;$('exampleZh').textContent=w.example_zh;$('meta').textContent=`${w.category} · ${i+1}/${view.length}`;$('wordPass').textContent=w.Pass||0;$('wordFail').textContent=w.Fail||0;$('nextReview').textContent=w.NextReview||'今天'}stats()}function stats(){$('dueCount').textContent=words.filter(due).length;$('passTotal').textContent=words.reduce((s,w)=>s+(+w.Pass||0),0);$('failTotal').textContent=words.reduce((s,w)=>s+(+w.Fail||0),0)}function move(n){if(!view.length)return;i=(i+n+view.length)%view.length;setFlip(false);render()}function answer(ok){let w=view[i];if(!w)return;if(ok){w.Pass=(+w.Pass||0)+1;let cur=+w.IntervalDays||0,idx=STEPS.findIndex(x=>x>cur),days=idx<0?STEPS.at(-1):STEPS[idx];w.IntervalDays=days;w.NextReview=addDays(days)}else{w.Fail=(+w.Fail||0)+1;w.IntervalDays=0;w.NextReview=today()}w.LastReviewed=today();progress[w.id]={Pass:w.Pass,Fail:w.Fail,NextReview:w.NextReview,LastReviewed:w.LastReviewed,IntervalDays:w.IntervalDays};save();let msg=ok?`Pass，下次 ${w.NextReview} 複習`:'Fail，今天再複習一次';filter();$('status').textContent=msg}function quote(x){x=String(x??'');return /[",\n]/.test(x)?'"'+x.replaceAll('"','""')+'"':x}function download(name,type,text){let b=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}$('csvInput').onchange=async e=>{let f=e.target.files[0];if(!f)return;let x=csv(await f.text());if(!x.length){$('status').textContent='CSV 格式不正確';return}words=x;progress={};save();cats();filter();$('status').textContent=`已匯入 ${words.length} 個單字`;e.target.value=''};$('exportCsv').onclick=()=>{let h=['English','Chinese','example','example_zh','category','Pass','Fail','NextReview','LastReviewed','IntervalDays'],lines=[h.join(','),...words.map(w=>h.map(k=>quote(w[k])).join(','))];download('vocabulary-progress.csv','text/csv;charset=utf-8','\uFEFF'+lines.join('\r\n'))};$('exportBackup').onclick=()=>download('vocabulary-backup.json','application/json',JSON.stringify({version:2,words,progress},null,2));$('backupInput').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());words=d.words||[];progress=d.progress||{};save();cats();filter();$('status').textContent='備份已還原'}catch{$('status').textContent='備份格式不正確'}e.target.value=''};$('category').onchange=filter;$('card').onclick=()=>setFlip(!flip);$('prev').onclick=()=>move(-1);$('next').onclick=()=>move(1);$('random').onclick=()=>{if(view.length){i=Math.floor(Math.random()*view.length);setFlip(false);render()}};$('pass').onclick=()=>answer(true);$('fail').onclick=()=>answer(false);$('speak').onclick=e=>{e.stopPropagation();let w=view[i];if(w&&speechSynthesis){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(w.English);u.lang='en-US';speechSynthesis.speak(u)}};function net(){$('network').textContent=navigator.onLine?'目前有網路':'離線模式'}addEventListener('online',net);addEventListener('offline',net);if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));net();load();
+const DATA_KEY = "vocab-pf-data-v3";
+const PROGRESS_KEY = "vocab-pf-progress-v3";
+const REVIEW_STEPS = [1, 3, 7, 14, 30, 60, 120];
+
+let words = [];
+let view = [];
+let currentIndex = 0;
+let flipped = false;
+let progress = {};
+
+const $ = (id) => document.getElementById(id);
+
+function localDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function today() {
+  return localDateString();
+}
+
+function addDays(days) {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + days);
+  return localDateString(date);
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function normalizeHeader(value) {
+  return String(value ?? "")
+    .replace(/^\uFEFF/, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "");
+}
+
+function detectDelimiter(text) {
+  const firstLine = text.replace(/^\uFEFF/, "").split(/\r?\n/, 1)[0] || "";
+  const delimiters = [",", ";", "\t"];
+  return delimiters.reduce((best, delimiter) => {
+    const count = firstLine.split(delimiter).length - 1;
+    return count > best.count ? { delimiter, count } : best;
+  }, { delimiter: ",", count: -1 }).delimiter;
+}
+
+function parseDelimitedText(text) {
+  // Correctly remove a UTF-8 BOM at the beginning of the CSV.
+  text = String(text ?? "").replace(/^\uFEFF/, "");
+
+  const delimiter = detectDelimiter(text);
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let position = 0; position < text.length; position += 1) {
+    const character = text[position];
+    const nextCharacter = text[position + 1];
+
+    if (character === '"' && quoted && nextCharacter === '"') {
+      cell += '"';
+      position += 1;
+    } else if (character === '"') {
+      quoted = !quoted;
+    } else if (character === delimiter && !quoted) {
+      row.push(cell.trim());
+      cell = "";
+    } else if ((character === "\n" || character === "\r") && !quoted) {
+      if (character === "\r" && nextCharacter === "\n") {
+        position += 1;
+      }
+      row.push(cell.trim());
+      cell = "";
+      if (row.some((value) => value !== "")) {
+        rows.push(row);
+      }
+      row = [];
+    } else {
+      cell += character;
+    }
+  }
+
+  if (cell !== "" || row.length > 0) {
+    row.push(cell.trim());
+    if (row.some((value) => value !== "")) {
+      rows.push(row);
+    }
+  }
+
+  return rows;
+}
+
+function parseCSV(text) {
+  const rows = parseDelimitedText(text);
+  if (rows.length < 2) {
+    return [];
+  }
+
+  const headers = rows[0].map(normalizeHeader);
+  const aliases = {
+    English: ["english", "word", "單字", "英文"],
+    Chinese: ["chinese", "meaning", "中文", "意思"],
+    example: ["example", "例句"],
+    example_zh: ["examplezh", "例句中文", "中文例句"],
+    category: ["category", "分類"],
+    Pass: ["pass"],
+    Fail: ["fail"],
+    NextReview: ["nextreview"],
+    LastReviewed: ["lastreviewed"],
+    IntervalDays: ["intervaldays"]
+  };
+
+  function columnIndex(key) {
+    const acceptedNames = aliases[key].map(normalizeHeader);
+    return headers.findIndex((header) => acceptedNames.includes(header));
+  }
+
+  const englishIndex = columnIndex("English");
+  if (englishIndex < 0) {
+    throw new Error("找不到 English 欄位，請確認 CSV 第一列欄位名稱");
+  }
+
+  function valueAt(row, key, fallback = "") {
+    const index = columnIndex(key);
+    return index >= 0 ? (row[index] ?? fallback) : fallback;
+  }
+
+  return rows.slice(1).map((row, index) => {
+    const english = String(row[englishIndex] ?? "").trim();
+    return {
+      id: `${english.toLowerCase()}-${index}`,
+      English: english,
+      Chinese: valueAt(row, "Chinese"),
+      example: valueAt(row, "example"),
+      example_zh: valueAt(row, "example_zh"),
+      category: valueAt(row, "category", "未分類") || "未分類",
+      Pass: Number(valueAt(row, "Pass", 0)) || 0,
+      Fail: Number(valueAt(row, "Fail", 0)) || 0,
+      NextReview: valueAt(row, "NextReview"),
+      LastReviewed: valueAt(row, "LastReviewed"),
+      IntervalDays: Number(valueAt(row, "IntervalDays", 0)) || 0
+    };
+  }).filter((word) => word.English !== "");
+}
+
+function saveLocalData() {
+  localStorage.setItem(DATA_KEY, JSON.stringify(words));
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+}
+
+function loadLocalData() {
+  try {
+    words = JSON.parse(localStorage.getItem(DATA_KEY)) || [];
+  } catch {
+    words = [];
+  }
+
+  try {
+    progress = JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {};
+  } catch {
+    progress = {};
+  }
+
+  words.forEach((word) => {
+    if (progress[word.id]) {
+      Object.assign(word, progress[word.id]);
+    }
+  });
+
+  rebuildCategories();
+  applyFilter();
+}
+
+function rebuildCategories() {
+  const categoryElement = $("category");
+  if (!categoryElement) return;
+
+  const previousValue = categoryElement.value;
+  const categories = [...new Set(words.map((word) => word.category))].sort();
+
+  categoryElement.innerHTML =
+    '<option value="all">全部分類</option>' +
+    categories.map((category) =>
+      `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`
+    ).join("");
+
+  if (categories.includes(previousValue)) {
+    categoryElement.value = previousValue;
+  }
+}
+
+function isDue(word) {
+  return !word.NextReview || word.NextReview <= today();
+}
+
+function applyFilter() {
+  const categoryElement = $("category");
+  const selectedCategory = categoryElement ? categoryElement.value : "all";
+
+  view = words.filter((word) =>
+    (selectedCategory === "all" || word.category === selectedCategory) && isDue(word)
+  );
+
+  // If nothing is due today, keep the cards visible for optional review.
+  if (view.length === 0) {
+    view = words.filter((word) =>
+      selectedCategory === "all" || word.category === selectedCategory
+    );
+  }
+
+  currentIndex = Math.min(currentIndex, Math.max(0, view.length - 1));
+  setFlipped(false);
+  render();
+}
+
+function setFlipped(value) {
+  flipped = value;
+  $("card")?.classList.toggle("flipped", value);
+  if ($("front")) $("front").hidden = value;
+  if ($("back")) $("back").hidden = !value;
+}
+
+function render() {
+  const word = view[currentIndex];
+
+  if (!word) {
+    if ($("english")) $("english").textContent = "請匯入 CSV";
+    if ($("meta")) $("meta").textContent = "尚未匯入";
+    if ($("chinese")) $("chinese").textContent = "";
+    if ($("example")) $("example").textContent = "";
+    if ($("exampleZh")) $("exampleZh").textContent = "";
+    if ($("wordPass")) $("wordPass").textContent = "0";
+    if ($("wordFail")) $("wordFail").textContent = "0";
+    if ($("nextReview")) $("nextReview").textContent = "-";
+  } else {
+    $("english").textContent = word.English;
+    $("chinese").textContent = word.Chinese;
+    $("example").textContent = word.example;
+    $("exampleZh").textContent = word.example_zh;
+    $("meta").textContent = `${word.category} · ${currentIndex + 1}/${view.length}`;
+    $("wordPass").textContent = word.Pass || 0;
+    $("wordFail").textContent = word.Fail || 0;
+    $("nextReview").textContent = word.NextReview || "今天";
+  }
+
+  updateStats();
+}
+
+function updateStats() {
+  if ($("dueCount")) $("dueCount").textContent = words.filter(isDue).length;
+  if ($("passTotal")) {
+    $("passTotal").textContent = words.reduce((sum, word) => sum + (Number(word.Pass) || 0), 0);
+  }
+  if ($("failTotal")) {
+    $("failTotal").textContent = words.reduce((sum, word) => sum + (Number(word.Fail) || 0), 0);
+  }
+}
+
+function move(offset) {
+  if (view.length === 0) return;
+  currentIndex = (currentIndex + offset + view.length) % view.length;
+  setFlipped(false);
+  render();
+}
+
+function recordAnswer(passed) {
+  const word = view[currentIndex];
+  if (!word) return;
+
+  if (passed) {
+    word.Pass = (Number(word.Pass) || 0) + 1;
+    const currentInterval = Number(word.IntervalDays) || 0;
+    const nextStepIndex = REVIEW_STEPS.findIndex((days) => days > currentInterval);
+    const nextInterval = nextStepIndex < 0
+      ? REVIEW_STEPS[REVIEW_STEPS.length - 1]
+      : REVIEW_STEPS[nextStepIndex];
+
+    word.IntervalDays = nextInterval;
+    word.NextReview = addDays(nextInterval);
+  } else {
+    word.Fail = (Number(word.Fail) || 0) + 1;
+    word.IntervalDays = 0;
+    word.NextReview = today();
+  }
+
+  word.LastReviewed = today();
+  progress[word.id] = {
+    Pass: word.Pass,
+    Fail: word.Fail,
+    NextReview: word.NextReview,
+    LastReviewed: word.LastReviewed,
+    IntervalDays: word.IntervalDays
+  };
+
+  saveLocalData();
+  const message = passed
+    ? `Pass，下次 ${word.NextReview} 複習`
+    : "Fail，今天再複習一次";
+
+  applyFilter();
+  if ($("status")) $("status").textContent = message;
+}
+
+function csvQuote(value) {
+  const text = String(value ?? "");
+  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+function downloadFile(fileName, type, content) {
+  const blob = new Blob([content], { type });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+$("csvInput")?.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const importedWords = parseCSV(await file.text());
+    if (importedWords.length === 0) {
+      throw new Error("CSV 沒有可用的單字資料");
+    }
+
+    // Preserve existing learning progress when the English word already exists.
+    const oldProgressByEnglish = new Map(
+      words.map((word) => [word.English.trim().toLowerCase(), {
+        Pass: word.Pass,
+        Fail: word.Fail,
+        NextReview: word.NextReview,
+        LastReviewed: word.LastReviewed,
+        IntervalDays: word.IntervalDays
+      }])
+    );
+
+    words = importedWords.map((word) => {
+      const previous = oldProgressByEnglish.get(word.English.trim().toLowerCase());
+      const csvHasProgress = word.Pass || word.Fail || word.NextReview || word.LastReviewed || word.IntervalDays;
+      return previous && !csvHasProgress ? { ...word, ...previous } : word;
+    });
+
+    progress = {};
+    words.forEach((word) => {
+      progress[word.id] = {
+        Pass: word.Pass,
+        Fail: word.Fail,
+        NextReview: word.NextReview,
+        LastReviewed: word.LastReviewed,
+        IntervalDays: word.IntervalDays
+      };
+    });
+
+    currentIndex = 0;
+    saveLocalData();
+    rebuildCategories();
+    applyFilter();
+    $("status").textContent = `已匯入 ${words.length} 個單字`;
+  } catch (error) {
+    $("status").textContent = `匯入失敗：${error.message}`;
+  }
+
+  event.target.value = "";
+});
+
+$("exportCsv")?.addEventListener("click", () => {
+  const headers = [
+    "English", "Chinese", "example", "example_zh", "category",
+    "Pass", "Fail", "NextReview", "LastReviewed", "IntervalDays"
+  ];
+
+  const lines = [
+    headers.join(","),
+    ...words.map((word) => headers.map((header) => csvQuote(word[header])).join(","))
+  ];
+
+  downloadFile(
+    "vocabulary-progress.csv",
+    "text/csv;charset=utf-8",
+    "\uFEFF" + lines.join("\r\n")
+  );
+});
+
+$("exportBackup")?.addEventListener("click", () => {
+  downloadFile(
+    "vocabulary-backup.json",
+    "application/json",
+    JSON.stringify({ version: 3, words, progress }, null, 2)
+  );
+});
+
+$("backupInput")?.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const backup = JSON.parse(await file.text());
+    if (!Array.isArray(backup.words)) {
+      throw new Error("備份格式不正確");
+    }
+
+    words = backup.words;
+    progress = backup.progress || {};
+    saveLocalData();
+    rebuildCategories();
+    applyFilter();
+    $("status").textContent = "備份已還原";
+  } catch (error) {
+    $("status").textContent = `還原失敗：${error.message}`;
+  }
+
+  event.target.value = "";
+});
+
+$("category")?.addEventListener("change", applyFilter);
+$("card")?.addEventListener("click", () => setFlipped(!flipped));
+$("card")?.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    setFlipped(!flipped);
+  }
+});
+$("prev")?.addEventListener("click", () => move(-1));
+$("next")?.addEventListener("click", () => move(1));
+$("random")?.addEventListener("click", () => {
+  if (view.length === 0) return;
+  currentIndex = Math.floor(Math.random() * view.length);
+  setFlipped(false);
+  render();
+});
+$("pass")?.addEventListener("click", () => recordAnswer(true));
+$("fail")?.addEventListener("click", () => recordAnswer(false));
+$("speak")?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const word = view[currentIndex];
+  if (!word || !("speechSynthesis" in window)) return;
+
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(word.English);
+  utterance.lang = "en-US";
+  speechSynthesis.speak(utterance);
+});
+
+function updateNetworkStatus() {
+  if ($("network")) {
+    $("network").textContent = navigator.onLine ? "目前有網路" : "離線模式";
+  }
+}
+
+window.addEventListener("online", updateNetworkStatus);
+window.addEventListener("offline", updateNetworkStatus);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(console.error);
+  });
+}
+
+updateNetworkStatus();
+loadLocalData();
