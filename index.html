@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="單字複習">
   <title>單字複習</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=12">
-  <link rel="stylesheet" href="./style.css?v=12">
+  <link rel="manifest" href="./manifest.webmanifest?v=13">
+  <link rel="stylesheet" href="./style.css?v=13">
 </head>
 <body>
 <main class="app">
@@ -46,12 +46,12 @@
   </section>
   <section class="actions"><button id="fail" class="fail" type="button">Fail</button><button id="pass" class="pass" type="button">Pass</button></section>
   <p id="status" class="status" hidden></p>
-  <section class="bottom-tools">
+  <section class="tools-wrap"><div class="tools-title">單字工具</div><div class="bottom-tools">
     <button id="sync" type="button">更新單字</button>
     <button id="export" class="secondary" type="button">匯出學習紀錄</button>
     <button id="showAll" class="secondary" type="button">查看全部單字</button>
     <button id="showFailed" class="failed-list" type="button">Failed 待複習</button>
-  </section>
+  </div></section>
 </main>
 
 <div id="listModal" class="modal" hidden>
@@ -63,6 +63,6 @@
   </section>
 </div>
 
-<script src="./fflate.min.js?v=12"></script>
-<script src="./app.js?v=12" defer></script>
+<script src="./fflate.min.js?v=13"></script>
+<script src="./app.js?v=13" defer></script>
 </body></html>
