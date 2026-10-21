@@ -63,3 +63,12 @@
 
 /* v16 semicolon line-break display */
 #question,#answer,#example,#exampleZh,.word-head strong,.word-example{white-space:pre-line}
+
+/* v17 robust semicolon layout + auto-fit */
+#question,#answer{max-width:100%;line-height:1.22;overflow-wrap:anywhere;word-break:normal;white-space:pre-line}
+#example,#exampleZh{white-space:pre-line;line-height:1.55}
+
+/* v18: auto-fit English/Chinese card text + parenthetical text */
+#question,#answer{max-width:100%;overflow-wrap:anywhere;word-break:break-word;white-space:pre-line;line-height:1.16}
+#question .paren,#answer .paren{font-size:.70em;font-weight:500;opacity:.72}
+#showAll{background:#eaf0ee !important;color:#44564e !important;border:1px solid rgba(65,83,74,.12) !important}
