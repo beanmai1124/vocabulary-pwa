@@ -40,3 +40,10 @@
 .tools-wrap #showAll{background:#eaf0ee;color:#44564e}
 .tools-wrap #showFailed{background:#f4dfd8;color:#8e513e}
 @media(max-width:430px){.tools-wrap{padding:12px;margin-top:22px}.tools-wrap .bottom-tools{grid-template-columns:1fr 1fr;gap:8px}.tools-wrap .bottom-tools button{font-size:14px;min-height:44px;padding:10px 7px}}
+
+/* v14 card status and multi-category */
+.card{position:relative}
+#meta{position:absolute;right:22px;bottom:22px;margin:0;color:#748078;font-size:15px;font-weight:650}
+#overdueBadge{position:absolute;right:20px;bottom:48px;margin:0;background:#f7e1dc;color:#a55348;border:1px solid #efcbc4;padding:5px 10px}
+.category-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.category-tag{display:inline-block;background:#e8f0ec;color:#496154;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700}
