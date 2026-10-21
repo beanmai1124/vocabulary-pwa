@@ -1,1 +1,71 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#315c4b"><meta name="apple-mobile-web-app-capable" content="yes"><title>單字複習</title><link rel="manifest" href="./manifest.webmanifest?v=9"><link rel="stylesheet" href="./style.css?v=9"></head><body><main class="app"><header><div><small>EXCEL SPACED REPETITION</small><h1>單字複習</h1></div><span id="network">檢查中</span></header><section class="toolbar"><button id="sync">同步 GitHub Excel</button><button id="export" class="secondary">匯出學習紀錄</button><select id="category"><option value="all">全部分類</option></select></section><section class="summary"><div><b id="due">0</b><span>今日待複習</span></div><div><b id="passes">0</b><span>Pass</span></div><div><b id="fails">0</b><span>Fail</span></div></section><section id="card" class="card"><div id="front"><p id="meta">載入中</p><p id="direction" class="direction"></p><h2 id="question">請稍候</h2><button id="speak" class="speak">🔊</button><p class="muted">點卡片查看答案</p></div><div id="back" hidden><p class="direction">答案</p><h3 id="answer"></h3><p id="example"></p><p id="exampleZh"></p></div></section><section class="counts"><span>Pass：<b id="wordPass">0</b></span><span>Fail：<b id="wordFail">0</b></span><span>下次：<b id="nextReview">-</b></span></section><section class="actions"><button id="fail" class="fail">Fail</button><button id="pass" class="pass">Pass</button></section><section class="nav"><button id="prev" class="secondary">上一個</button><button id="random" class="secondary">隨機</button><button id="next" class="secondary">下一個</button></section><p id="status" class="status">載入中...</p></main><script src="./fflate.min.js?v=9"></script><script src="./app.js?v=9" defer></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#315c4b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="單字複習">
+  <title>單字複習</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=10">
+  <link rel="stylesheet" href="./style.css?v=10">
+</head>
+<body>
+<main class="app">
+  <header><div><small>EXCEL SPACED REPETITION</small><h1>單字複習</h1></div><span id="network">檢查中</span></header>
+
+  <section class="toolbar">
+    <button id="sync" type="button">同步 GitHub Excel</button>
+    <button id="export" class="secondary" type="button">匯出學習紀錄</button>
+    <button id="showAll" class="secondary" type="button">查看全部單字</button>
+    <button id="showFailed" class="failed-list" type="button">Failed 待複習</button>
+    <select id="category"><option value="all">全部分類</option></select>
+  </section>
+
+  <section class="summary">
+    <div><b id="due">0</b><span>今日待複習</span></div>
+    <div><b id="overdue">0</b><span>Overdue</span></div>
+    <div><b id="failedDue">0</b><span>Failed 待複習</span></div>
+  </section>
+
+  <section id="emptyState" class="empty-state" hidden>
+    <h2>今天已完成</h2><p>今天複習過的單字不會再次出現。</p>
+  </section>
+
+  <section id="card" class="card" tabindex="0" role="button" aria-label="點一下查看答案">
+    <div id="front">
+      <p id="meta">載入中</p>
+      <span id="overdueBadge" class="overdue-badge" hidden>Overdue</span>
+      <p id="direction" class="direction"></p>
+      <h2 id="question">請稍候</h2>
+      <button id="speak" class="speak" type="button">🔊</button>
+      <p class="muted">點卡片查看答案</p>
+    </div>
+    <div id="back" hidden>
+      <p class="direction">答案</p>
+      <h3 id="answer"></h3>
+      <p id="example"></p><p id="exampleZh"></p>
+    </div>
+  </section>
+
+  <section class="counts">
+    <span>Pass：<b id="wordPass">0</b></span>
+    <span>Fail：<b id="wordFail">0</b></span>
+    <span>下次：<b id="nextReview">-</b></span>
+  </section>
+  <section class="actions"><button id="fail" class="fail" type="button">Fail</button><button id="pass" class="pass" type="button">Pass</button></section>
+  <p id="status" class="status">程式載入中...</p>
+</main>
+
+<div id="listModal" class="modal" hidden>
+  <section class="modal-panel">
+    <header class="modal-header"><h2 id="listTitle">全部單字</h2><button id="closeList" class="close" type="button">關閉</button></header>
+    <input id="searchInput" class="search" type="search" placeholder="搜尋英文、中文、分類">
+    <p id="listSummary" class="list-summary"></p>
+    <div id="wordList" class="word-list"></div>
+  </section>
+</div>
+
+<script src="./fflate.min.js?v=10"></script>
+<script src="./app.js?v=10" defer></script>
+</body></html>
