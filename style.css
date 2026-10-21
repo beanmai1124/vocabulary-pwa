@@ -47,3 +47,16 @@
 #overdueBadge{position:absolute;right:20px;bottom:48px;margin:0;background:#f7e1dc;color:#a55348;border:1px solid #efcbc4;padding:5px 10px}
 .category-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .category-tag{display:inline-block;background:#e8f0ec;color:#496154;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700}
+
+/* v15 integrated completion card and all-word filters */
+.complete-view{width:100%;min-height:220px;display:grid;place-items:center;text-align:center}
+.complete-view[hidden]{display:none}
+.complete-view h2{font-size:clamp(30px,7vw,46px);margin:0;color:#24312b}
+.list-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 8px}
+.list-filters .search,.list-filters select{width:100%;margin:0;min-height:44px}
+.list-filters select{background:#fff;color:#26352e;border:1px solid #ccd5cf;font-weight:650}
+.word-example{margin-top:12px;color:#34433c;font-size:14px;line-height:1.55}
+.word-details{margin-top:12px;padding-top:10px;border-top:1px solid #edf0ee;color:#68756f;font-size:13px;line-height:1.7}
+.word-details .detail-line{display:flex;flex-wrap:wrap;gap:12px 18px}
+.word-details .tag{margin-left:0}
+@media(max-width:520px){.list-filters{grid-template-columns:1fr}.word-details .detail-line{display:block}.word-details .detail-line span{display:inline-block;margin-right:12px}}

@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="單字複習">
   <title>單字複習</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=14">
-  <link rel="stylesheet" href="./style.css?v=14">
+  <link rel="manifest" href="./manifest.webmanifest?v=15">
+  <link rel="stylesheet" href="./style.css?v=15">
 </head>
 <body>
 <main class="app">
@@ -22,11 +22,10 @@
     <div><b id="failedDue">0</b><span>Failed 待複習</span></div>
   </section>
 
-  <section id="emptyState" class="empty-state" hidden>
-    <h2>今天已完成</h2><p>今天複習過的單字不會再次出現。</p>
-  </section>
+
 
   <section id="card" class="card" tabindex="0" role="button" aria-label="點一下查看答案">
+    <div id="completeView" class="complete-view" hidden><h2>今天已完成</h2></div>
     <div id="front">
       <p id="meta">載入中</p>
       <span id="overdueBadge" class="overdue-badge" hidden>Overdue</span>
@@ -57,12 +56,12 @@
 <div id="listModal" class="modal" hidden>
   <section class="modal-panel">
     <header class="modal-header"><h2 id="listTitle">全部單字</h2><button id="closeList" class="close" type="button">關閉</button></header>
-    <input id="searchInput" class="search" type="search" placeholder="搜尋英文、中文、分類">
+    <div class="list-filters"><input id="searchInput" class="search" type="search" placeholder="搜尋英文、中文、分類"><select id="listCategory" aria-label="分類"><option value="all">全部分類</option></select></div>
     <p id="listSummary" class="list-summary"></p>
     <div id="wordList" class="word-list"></div>
   </section>
 </div>
 
-<script src="./fflate.min.js?v=14"></script>
-<script src="./app.js?v=14" defer></script>
+<script src="./fflate.min.js?v=15"></script>
+<script src="./app.js?v=15" defer></script>
 </body></html>
