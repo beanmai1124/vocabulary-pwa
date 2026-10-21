@@ -70,5 +70,13 @@
 
 /* v18: auto-fit English/Chinese card text + parenthetical text */
 #question,#answer{max-width:100%;overflow-wrap:anywhere;word-break:break-word;white-space:pre-line;line-height:1.16}
-#question .paren,#answer .paren{font-size:.70em;font-weight:500;opacity:.72}
+#question .paren,#answer .paren,#question .note-text,#answer .note-text{font-size:.68em;font-weight:500;opacity:.72}
 #showAll{background:#eaf0ee !important;color:#44564e !important;border:1px solid rgba(65,83,74,.12) !important}
+
+/* v19 */
+.word-row{cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+.word-row:active{transform:scale(.99)}
+.actions button:disabled{opacity:.42;filter:saturate(.5);cursor:not-allowed}
+
+/* v20: clearly smaller parenthetical and square-bracket notes */
+#question .small-note,#answer .small-note,#question .paren,#answer .paren{font-size:55% !important;font-weight:500 !important;opacity:.72;line-height:1.1;display:inline-block;vertical-align:baseline}

@@ -1,7 +1,7 @@
-# Vocabulary PWA v18
+# Vocabulary PWA v20
 
-- English / Chinese 自動縮放字體以符合單字卡。
-- 半形 `;` 與全形 `；` 都會換行。
-- 括號 `( ... )` 內容以 70% 字體顯示。
-- 查看全部單字按鈕改為淺灰綠色。
-- 保留既有學習規則與功能。
+- Overdue 僅在 `Today > NextReview` 時顯示。
+- `Today < NextReview` 或 `Today = NextReview` 均不顯示 Overdue。
+- 尚未安排 NextReview 的新單字不顯示 Overdue。
+- `( ... )` 與 `[ ... ]` 內的文字縮小為主字體的 55%。
+- 保留查看全部單字點選後回主畫面預覽的功能；預覽不計算 Pass/Fail。
