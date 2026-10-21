@@ -1,7 +1,6 @@
-# Vocabulary PWA v20
+# Vocabulary PWA v21
 
-- Overdue 僅在 `Today > NextReview` 時顯示。
-- `Today < NextReview` 或 `Today = NextReview` 均不顯示 Overdue。
-- 尚未安排 NextReview 的新單字不顯示 Overdue。
-- `( ... )` 與 `[ ... ]` 內的文字縮小為主字體的 55%。
-- 保留查看全部單字點選後回主畫面預覽的功能；預覽不計算 Pass/Fail。
+- 移除所有 Overdue 顯示、統計與標記。
+- 移除「僅查看模式」提示。
+- 從查看全部單字點選單字後，仍會回主畫面預覽；不計算 Pass/Fail。
+- 保留括號與中括號小字、自動縮放與其他功能。
