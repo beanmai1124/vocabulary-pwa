@@ -60,3 +60,6 @@
 .word-details .detail-line{display:flex;flex-wrap:wrap;gap:12px 18px}
 .word-details .tag{margin-left:0}
 @media(max-width:520px){.list-filters{grid-template-columns:1fr}.word-details .detail-line{display:block}.word-details .detail-line span{display:inline-block;margin-right:12px}}
+
+/* v16 semicolon line-break display */
+#question,#answer,#example,#exampleZh,.word-head strong,.word-example{white-space:pre-line}
