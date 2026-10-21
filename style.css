@@ -80,3 +80,5 @@
 
 /* v20: clearly smaller parenthetical and square-bracket notes */
 #question .small-note,#answer .small-note,#question .paren,#answer .paren{font-size:55% !important;font-weight:500 !important;opacity:.72;line-height:1.1;display:inline-block;vertical-align:baseline}
+
+.overdue-badge[hidden]{display:none!important}
