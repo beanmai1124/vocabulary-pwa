@@ -1,6 +1,10 @@
-# Vocabulary PWA v21
+# Vocabulary PWA v23
 
-- 移除所有 Overdue 顯示、統計與標記。
-- 移除「僅查看模式」提示。
-- 從查看全部單字點選單字後，仍會回主畫面預覽；不計算 Pass/Fail。
-- 保留括號與中括號小字、自動縮放與其他功能。
+- 修正 Service Worker 仍引用 v19 資源的問題。
+- 所有 App 資源統一使用 v23。
+- vocabulary.xlsx 不再加入離線快取。
+- 每次啟動及按「更新單字」都直接向 GitHub Pages 讀取最新 Excel。
+- 保留 Overdue 日期規則、() / [] 小字、清單點選預覽及其他既有功能。
+- 清單預覽不顯示提示，也不計算 Pass / Fail。
+
+更新 App 程式時，請勿用 ZIP 內的 vocabulary.xlsx 覆蓋 GitHub 上自己的新版 Excel。

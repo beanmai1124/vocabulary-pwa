@@ -1,1 +1,34 @@
-const CACHE="excel-vocab-v21";const FILES=["./","./index.html","./style.css?v=19","./app.js?v=19","./fflate.min.js?v=19","./manifest.webmanifest?v=19","./vocabulary.xlsx"];self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)));self.skipWaiting()});self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request)))})
+const CACHE="excel-vocab-v23";
+const APP_SHELL=[
+  "./",
+  "./index.html?v=23",
+  "./style.css?v=23",
+  "./app.js?v=23",
+  "./fflate.min.js?v=23",
+  "./manifest.webmanifest?v=23"
+];
+self.addEventListener("install",event=>{
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)));
+  self.skipWaiting();
+});
+self.addEventListener("activate",event=>{
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))));
+  self.clients.claim();
+});
+self.addEventListener("fetch",event=>{
+  if(event.request.method!=="GET")return;
+  const url=new URL(event.request.url);
+  if(url.pathname.endsWith("/vocabulary.xlsx")){
+    event.respondWith(fetch(event.request,{cache:"no-store"}));
+    return;
+  }
+  event.respondWith(
+    fetch(event.request).then(response=>{
+      if(response&&response.ok){
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
+      }
+      return response;
+    }).catch(()=>caches.match(event.request).then(hit=>hit||caches.match("./index.html?v=23")))
+  );
+});
