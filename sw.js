@@ -1,11 +1,11 @@
-const CACHE="excel-vocab-v23";
+const CACHE="excel-vocab-v24";
 const APP_SHELL=[
   "./",
-  "./index.html?v=23",
-  "./style.css?v=23",
-  "./app.js?v=23",
-  "./fflate.min.js?v=23",
-  "./manifest.webmanifest?v=23"
+  "./index.html?v=24",
+  "./style.css?v=24",
+  "./app.js?v=24",
+  "./fflate.min.js?v=24",
+  "./manifest.webmanifest?v=24"
 ];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)));
@@ -29,6 +29,6 @@ self.addEventListener("fetch",event=>{
         caches.open(CACHE).then(cache=>cache.put(event.request,copy));
       }
       return response;
-    }).catch(()=>caches.match(event.request).then(hit=>hit||caches.match("./index.html?v=23")))
+    }).catch(()=>caches.match(event.request).then(hit=>hit||caches.match("./index.html?v=24")))
   );
 });

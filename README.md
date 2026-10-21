@@ -1,10 +1,9 @@
-# Vocabulary PWA v23
+# Vocabulary PWA v24
 
-- 修正 Service Worker 仍引用 v19 資源的問題。
-- 所有 App 資源統一使用 v23。
-- vocabulary.xlsx 不再加入離線快取。
-- 每次啟動及按「更新單字」都直接向 GitHub Pages 讀取最新 Excel。
-- 保留 Overdue 日期規則、() / [] 小字、清單點選預覽及其他既有功能。
-- 清單預覽不顯示提示，也不計算 Pass / Fail。
+- 修正「查看全部單字」點選單字後，預覽卡片無法翻面的問題。
+- 預覽模式可點一下卡片，在單字與內容之間切換。
+- 預覽模式仍不顯示提示、不計算 Pass / Fail，也不修改複習日期。
+- vocabulary.xlsx 維持 network-only，每次直接讀取 GitHub Pages 最新內容。
+- 保留 Overdue 日期規則、括號小字與其他既有功能。
 
-更新 App 程式時，請勿用 ZIP 內的 vocabulary.xlsx 覆蓋 GitHub 上自己的新版 Excel。
+上傳時請保留 GitHub 上自己的新版 vocabulary.xlsx，不要用 ZIP 內的範例 Excel 覆蓋。
