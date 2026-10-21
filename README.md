@@ -1,10 +1,20 @@
-# Vocabulary PWA v25
+# Vocabulary PWA stable
 
-- 修正上方 Overdue 為 0，但單字卡仍顯示 Overdue 標籤的 UI 問題。
-- Today = Next Review Date 時不顯示 Overdue。
-- 只有 Today > Next Review Date 才顯示 Overdue。
-- 強制 hidden 的 Overdue 標籤使用 display:none，避免 CSS display:inline-block 蓋過隱藏狀態。
-- 保留查看全部單字預覽翻面功能，預覽不計算 Pass / Fail。
-- vocabulary.xlsx 維持直接讀取 GitHub Pages 最新內容。
+此版本開始不再使用任何版本編號。
 
-上傳時請保留 GitHub 上自己的 vocabulary.xlsx，不要用 ZIP 內範例檔覆蓋。
+固定檔名：
+- index.html
+- app.js
+- style.css
+- sw.js
+- manifest.webmanifest
+- fflate.min.js
+- vocabulary.xlsx
+
+固定瀏覽器儲存名稱：
+- vocabulary-words
+- vocabulary-progress
+
+第一次開啟會自動尋找並合併 v6 到 v25 的舊 Pass / Fail 紀錄，再存入固定的 vocabulary-progress。之後更新程式不會再因版本名稱改變而看不到紀錄。
+
+vocabulary.xlsx 永遠直接讀取 GitHub Pages 最新內容。上傳程式時請保留 GitHub 上自己的 vocabulary.xlsx。
