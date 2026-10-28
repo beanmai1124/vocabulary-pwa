@@ -66,17 +66,29 @@ function primaryText(word,english){return isSentence(word)?(english?word.English
 function secondaryText(word,english){return isSentence(word)?"":(english?word.EnglishSentence:word.ChineseSentence)}
 function setCardLayout(word){$("card").classList.toggle("sentence-card",isSentence(word));$("card").classList.toggle("word-card",!isSentence(word))}
 function render(){
-  const word=browseOnly?browseWord:queue[currentIndex],has=Boolean(word);$("card").hidden=false;$("completeView").hidden=has;$("front").hidden=!has;$("back").hidden=true;$("card").classList.remove("flipped");isFlipped=false;$("fail").disabled=!has||browseOnly;$("pass").disabled=!has||browseOnly;
+  const word=browseOnly?browseWord:queue[currentIndex],has=Boolean(word);
+  $("card").hidden=false;$("completeView").hidden=has;$("front").hidden=!has;$("back").hidden=true;$("card").classList.remove("flipped");isFlipped=false;
+  $("fail").disabled=!has||browseOnly;$("pass").disabled=!has||browseOnly;
   const counts=document.querySelector(".counts"),actions=document.querySelector(".actions");counts.hidden=!has;actions.hidden=!has;
   if(has){
-    const st=state(word);setCardLayout(word);
-    applyCardText($("question"),primaryText(word,englishFirst));applyCardText($("answer"),primaryText(word,!englishFirst));
+    const st=state(word);$("card").classList.remove("sentence-card");$("card").classList.add("word-card");
+    const frontWord=englishFirst?word.EnglishWord:word.ChineseWord;
+    const frontSentence=englishFirst?word.EnglishSentence:word.ChineseSentence;
+    const backWord=englishFirst?word.ChineseWord:word.EnglishWord;
+    const backSentence=englishFirst?word.ChineseSentence:word.EnglishSentence;
+    applyCardText($("question"),frontWord);
+    applyCardText($("answer"),backWord);
+    const frontSentenceEl=$("frontSentence");frontSentenceEl.innerHTML=richTextHtml(frontSentence);frontSentenceEl.hidden=!frontSentence;
+    const backSentenceEl=$("backSentence");backSentenceEl.innerHTML=richTextHtml(backSentence);backSentenceEl.hidden=!backSentence;
+    const other=$("other");other.innerHTML=richTextHtml(word.other);other.hidden=!word.other;
     $("meta").textContent=browseOnly?"":`${currentIndex+1} / ${queue.length}`;
-    $("example").textContent=normalizeBreaks(secondaryText(word,!englishFirst));
-    $("exampleZh").textContent="";
-    const other=$("other");if(other){other.innerHTML=richTextHtml(word.other);other.hidden=!word.other}
-    $("wordPass").textContent=st.Pass||0;$("wordFail").textContent=st.Fail||0;$("nextReview").textContent=st.NextReview||"今天";$("overdueBadge").hidden=browseOnly||!isOverdue(word);requestAnimationFrame(()=>fitCardText($("question")));
-  }else{$("overdueBadge").hidden=true;$("meta").textContent=""}
+    $("wordPass").textContent=st.Pass||0;$("wordFail").textContent=st.Fail||0;$("nextReview").textContent=st.NextReview||"今天";
+    $("overdueBadge").hidden=browseOnly||!isOverdue(word);
+    requestAnimationFrame(()=>fitCardText($("question")));
+  }else{
+    $("overdueBadge").hidden=true;$("meta").textContent="";
+    if($("frontSentence"))$("frontSentence").hidden=true;if($("backSentence"))$("backSentence").hidden=true;if($("other"))$("other").hidden=true;
+  }
   updateSummary();
 }
 function updateSummary(){$("due").textContent=words.filter(isDue).length;$("overdue").textContent=words.filter(isOverdue).length;$("failedDue").textContent=words.filter(isFailedDue).length}
