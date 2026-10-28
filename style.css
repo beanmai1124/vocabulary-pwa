@@ -109,3 +109,16 @@
 /* Balanced card text - fixed */
 .card h2{font-size:clamp(30px,7.8vw,48px)!important;line-height:1.18}
 .card h3{font-size:clamp(26px,7vw,40px)!important;line-height:1.2}
+
+/* Sentence and supplementary-content layout */
+.card #front,.card #back{width:100%}
+.card.sentence-card #front,.card.sentence-card #back{text-align:left}
+.card.sentence-card #question,.card.sentence-card #answer{text-align:left;margin-left:0;margin-right:0}
+.card.word-card #front,.card.word-card #back{text-align:center}
+.card.word-card #question,.card.word-card #answer{text-align:center}
+#example,#exampleZh,.other-content{text-align:left;width:100%;white-space:pre-line}
+.other-content{margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.28);font-size:15px;line-height:1.55}
+.card:not(.flipped) .other-content{border-top-color:#e3e9e5;color:#53635b}
+.card.flipped .other-content{color:#e4eee9}
+.other-content[hidden]{display:none!important}
+.card.sentence-card #question,.card.sentence-card #answer{font-size:clamp(24px,6vw,38px)!important;line-height:1.45}

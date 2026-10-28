@@ -1,4 +1,4 @@
-const CACHE="excel-vocab-cache-20261022e";
+const CACHE="excel-vocab-cache-20261028-layout";
 const APP_SHELL=["./","./index.html","./style.css","./app.js","./fflate.min.js","./manifest.webmanifest"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)));
